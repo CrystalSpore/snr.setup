@@ -1,0 +1,49 @@
+COLOR='\033[0;31m'
+NC='\033[03m'
+
+echo -e "${COLOR}Hello! Welcome to setup!${NC}"
+echo -e "${COLOR}Please type 1 for initial setup. After reboot, relaunch and type 2.${NC}"
+
+read condition
+
+if [ $condition -eq 1 ]
+then
+	# sync repositories & get up to date
+	sudo apt update
+	sudo apt upgrade
+
+	# get rid of the garbage gnome & switch to unity
+	sudo apt install unity
+
+	# install my personal text editor (-nox so always in terminal)
+	sudo apt install emacs-nox
+
+	# add chrome repository, then download
+	wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+	echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
+	sudo apt update
+	sudo apt install google-chrome-stable
+
+	# install snap tool, then download snaps
+	sudo apt install snap
+	sudo snap install discord
+	sudo snap install spotify
+	sudo snap install intellij-idea-ultimate --classic --edge
+
+	# should already be installed, but just in case (might switch to wget in the future so true no setup needed)
+	sudo apt install git
+
+	# for email & calendar stuff (google calendar needs two addons, lightning, and the google calendar manager)
+	sudo apt install thunderbird
+
+	# opens MultiMC page, to be downloaded & installed
+	xdg-open https://multimc.org/
+
+	echo -e "${COLOR}Complete! Please reboot, then apply tweaks!${NC}"
+elif [ $condition -eq 2 ]
+then
+     gsettings set com.canonical.Unity.Launcher launcher-position Bottom
+else
+	echo -e "${COLOR}This is an unsupported input. Please re-run with valid input.${NC}"
+	exit
+fi
